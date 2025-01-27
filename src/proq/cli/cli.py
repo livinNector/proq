@@ -7,6 +7,7 @@ from termcolor import cprint
 
 from proq.core import ProQ
 from proq.evaluate_utils import ProqCheck
+from proq.gen_ai_utils import generate_proq
 from proq.utils import color_diff
 
 from . import export
@@ -140,6 +141,12 @@ class ProqCli:
                 end=" ",
             )
             print(os.path.relpath(file_path, os.curdir))
+
+    def generate(self, prompt, *examples, output_file=None, model="groq:gemma2-9b-it"):
+        proq = generate_proq(prompt, example_files=examples, model=model)
+        if output_file is None:
+            output_file = proq.title.lower().replace(" ", "_") + ".md"
+        proq.to_file(output_file)
 
 
 def main():
